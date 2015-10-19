@@ -12,6 +12,13 @@
     width:900px;
     height:500px;
   }
+#name {
+   position:absolute;
+   top:30px;
+   left:20px;
+   font-family:arial;
+   font-size:3em;
+ }
 
   .graticule {
     fill:none;
@@ -25,11 +32,16 @@
     stroke:white;
     stroke-width:1px;
   }
+  .state:hover {
+    fill:#313;
+  }
   </style>
 </head>
 
 <body>
-  <div id="map"></div>
+  <div id="map">
+    <div id="name"></div>
+  </div>
 
   <script>
   var width = 900, 
@@ -54,12 +66,17 @@
     console.log(topojson.feature(state, state.objects.usStates).features)
 
 
+  var text_area = d3.select("#name").append('text');
     svg.selectAll(".state")   
       //.data(topojson.feature(state, state.objects.counties).features)  
       .data(topojson.feature(state, state.objects.usStates).features)  
       .enter().append("path") 
       .attr("class", "state") 
       .attr("d", path)
+      .on("mouseover", function(d) {
+        var abbreviation = d.properties.STATE_ABBR;
+        text_area.text(abbreviation);
+      })
       ;
 
    
