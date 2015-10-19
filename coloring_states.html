@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>d3: Topojson Basemap</title>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <style>
+  body { margin:0; padding:0; }
+  #map {
+    display:block;
+    width:900px;
+    height:500px;
+  }
+
+  .graticule {
+    fill:none;
+    stroke:steelblue;
+    stroke-width:1px;
+    stroke-opacity:0.5;
+  }
+
+  .state {
+    fill:#c0c0c0;
+    stroke:white;
+    stroke-width:1px;
+  }
+  </style>
+</head>
+
+<body>
+  <h1> Color States Individually
+  <div id="map"></div>
+
+  <script>
+  var width = 900, 
+      height = 480;   
+
+  var colors = {'NY': 'red', 'CA': 'blue', 'FL': 'green'}
+
+  projection = d3.geo.albersUsa() 
+    .scale(1000)
+    .translate([width / 2, height / 2])
+    .precision(.1);
+
+  path = d3.geo.path()  
+    .projection(projection);  
+
+  svg = d3.select("#map").append("svg")   
+    .attr("width", width)
+    .attr("height", height);
+
+  d3.json("data/usa_states.json", function(error,state) {
+    console.log(state)
+    console.log(topojson.feature(state, state.objects.usStates).features)
+
+
+    svg.selectAll(".state")   
+      //.data(topojson.feature(state, state.objects.counties).features)  
+      .data(topojson.feature(state, state.objects.usStates).features)  
+      .enter().append("path") 
+      .attr("class", "state") 
+      .attr("d", path)
+      .style('fill', function(d) {
+         return d.properties['STATE_ABBR'] in colors ? colors[d.properties['STATE_ABBR']] : 'grey'  
+       });
+
+
+  });
+  </script>
+</body>
+</html>
