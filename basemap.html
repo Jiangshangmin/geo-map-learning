@@ -34,9 +34,7 @@
   <script>
   var width = 900, 
       height = 480;   
-  var points = [[-122.490402, 37.786453],
-                [-90, 40]];
-
+  
   projection = d3.geo.albersUsa() 
     .scale(1000)
     .translate([width / 2, height / 2])
@@ -50,12 +48,11 @@
     .attr("height", height);
 
   d3.json("data/usa_states.json", function(error,state) {
-    console.log(state)
-    console.log(topojson.feature(state, state.objects.usStates).features)
+    console.log('topo json', state)
+    console.log('geo features', topojson.feature(state, state.objects.usStates).features)
 
 
     svg.selectAll(".state")   
-      //.data(topojson.feature(state, state.objects.counties).features)  
       .data(topojson.feature(state, state.objects.usStates).features)  
       .enter().append("path") 
       .attr("class", "state") 
